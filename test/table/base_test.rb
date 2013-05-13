@@ -132,6 +132,22 @@ module Bureau
         end
       end
 
+      describe "renderer" do
+        it "initialize with default renderer" do
+          refute_nil subject.new.renderer
+        end
+
+        it "initialize with optional renderer" do
+          renderer = Class.new do
+            include Bureau::Render::Base
+          end
+
+          instance = subject.new(:renderer => renderer)
+
+          assert_equal renderer, instance.renderer
+        end
+      end
+
       private
 
       def subject

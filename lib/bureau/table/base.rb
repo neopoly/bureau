@@ -8,7 +8,7 @@ module Bureau
       module InstanceMethods
         include Errors
 
-        attr_reader :collection, :row_presenter, :cell_presenter
+        attr_reader :collection, :row_presenter, :cell_presenter, :renderer
 
         def initialize(options = {})
           raise MissingDefaultAttributesError.new("Implement default_attributes") unless respond_to? :default_attributes
@@ -21,6 +21,7 @@ module Bureau
 
           @row_presenter  = options.fetch(:row_presenter, default_row_presenter)
           @cell_presenter = options.fetch(:cell_presenter, default_cell_presenter)
+          @renderer       = options.fetch(:renderer, default_renderer)
 
           @collection     = collection.map do |item|
             row_presenter.new(item)
@@ -51,24 +52,8 @@ module Bureau
           end
         end
 
-        # TODO: refactor & test me!
         def render
-          package   = Axlsx::Package.new
-          workbook  = package.workbook
-          workbook.add_worksheet(:name => "Teilnehmer Export") do |sheet|
-            sheet.add_row header.map { |column| column.value }
-            rows.each do |row|
-              sheet.add_row row.map { |column| column.value }
-            end
-            sheet.auto_filter = "A1:AU1"
-            sheet.sheet_view.pane do |pane|
-              pane.top_left_cell = "B2"
-              pane.state = :frozen_split
-              pane.y_split = 1 # rows docked on top
-              pane.x_split = 0 # rows docked left
-            end
-          end
-          package.to_stream().read
+          renderer.new(:header => header, :rows => rows).render
         end
 
         private
@@ -79,6 +64,10 @@ module Bureau
 
         def default_cell_presenter
           Class.new { include Bureau::Cell::Base }
+        end
+
+        def default_renderer
+          Class.new { include Bureau::Render::Base }
         end
 
       end
