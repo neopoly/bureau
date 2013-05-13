@@ -18,7 +18,58 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Short version
+
+1. Create a new class that represent the table.
+2. Include Bureau::Table::Base module and provide 2 methods.
+
+```ruby
+module Bureau
+  module Table
+    class PeoplePresenter
+
+      include Bureau::Table::Base
+
+      def default_attributes
+        {
+          'firstname' => 'First name',
+          'lastname' => 'Last name',
+          'birthday' => 'Birthday'
+        }
+      end
+
+      def default_collection
+        Person.all
+      end
+
+    end
+  end
+end
+```
+
+3. Return a xlsx file.
+
+```ruby
+table = Bureau::Table::PeoplePresenter.new
+
+table.render
+```
+
+4. Bureau register a new mime type - render xlsx from your controller.
+
+```ruby
+class SomeController < ApplicationController
+
+  def export
+    table = Bureau::Table::PeoplePresenter.new
+
+    respond_to do |format|
+      format.xlsx { render :text => table.render }
+    end
+  end
+
+end
+```
 
 ## Contributing
 
