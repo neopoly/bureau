@@ -20,8 +20,7 @@ Or install it yourself as:
 
 ### Short version
 
-1. Create a new class that represent the table.
-2. Include Bureau::Table::Base module and provide 2 methods.
+Create a new class that represent the table, include Bureau::Table::Base module and provide 2 methods.
 
 ```ruby
 module Bureau
@@ -47,7 +46,7 @@ module Bureau
 end
 ```
 
-3. Return a xlsx file.
+Return a xlsx file.
 
 ```ruby
 table = Bureau::Table::PeoplePresenter.new
@@ -55,7 +54,7 @@ table = Bureau::Table::PeoplePresenter.new
 table.render
 ```
 
-4. Bureau register a new mime type - render xlsx from your controller.
+Bureau register a new mime type - render xlsx from your controller.
 
 ```ruby
 class SomeController < ApplicationController
