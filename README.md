@@ -1,6 +1,6 @@
 # Bureau
 
-Bureau provide a simple interface to build custom xlsx files.
+Bureau provides a simple interface to build custom xlsx files.
 
 [![Build Status](https://secure.travis-ci.org/neopoly/bureau.png?branch=master)](http://travis-ci.org/neopoly/bureau) [![Gem Version](https://badge.fury.io/rb/bureau.png)](http://badge.fury.io/rb/bureau) [![Code Climate](https://codeclimate.com/github/neopoly/bureau.png)](https://codeclimate.com/github/neopoly/bureau)
 
