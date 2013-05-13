@@ -1,6 +1,6 @@
 # Bureau
 
-TODO: Write a gem description
+Bureau provide a simple interface to build custom xlsx files.
 
 ## Installation
 
