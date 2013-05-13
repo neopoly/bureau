@@ -1,5 +1,4 @@
 require 'bureau/errors'
-require 'axlsx'
 
 module Bureau
   module Table
