@@ -2,7 +2,7 @@ require "test_helper"
 
 module Bureau
   module Row
-    class BaseTest < ActiveSupport::TestCase
+    class BaseTest < TestCase
 
       it "return given object" do
         object = Object.new

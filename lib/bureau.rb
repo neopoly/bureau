@@ -4,7 +4,7 @@ require 'bureau/table'
 require 'bureau/row'
 require 'bureau/cell'
 
-require "bureau/engine"
+require "bureau/engine" if defined? Rails
 
 module Bureau
 end

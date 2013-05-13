@@ -2,7 +2,7 @@ require "test_helper"
 
 module Bureau
   module Cell
-    class BaseTest < ActiveSupport::TestCase
+    class BaseTest < TestCase
 
       it "return given value" do
         cell_presenter = Class.new do

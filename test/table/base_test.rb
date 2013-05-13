@@ -2,11 +2,11 @@ require "test_helper"
 
 module Bureau
   module Table
-    class BaseTest < ActiveSupport::TestCase
+    class BaseTest < TestCase
 
       describe "attributes" do
         it "raises if default_attributes are not defined" do
-          assert_raise Bureau::Errors::MissingDefaultAttributesError do
+          assert_raises Bureau::Errors::MissingDefaultAttributesError do
             subject_without_default_attributes.new
           end
         end
@@ -80,17 +80,17 @@ module Bureau
 
       describe "collection" do
         it "raises if default_collection is not defined" do
-          assert_raise Bureau::Errors::MissingDefaultCollectionError do
+          assert_raises Bureau::Errors::MissingDefaultCollectionError do
             subject_without_default_collection.new
           end
         end
 
         it "raises if collection is empty" do
-          assert_raise Bureau::Errors::EmptyCollectionError do
+          assert_raises Bureau::Errors::EmptyCollectionError do
             subject_with_empty_default_collection.new
           end
 
-          assert_raise Bureau::Errors::EmptyCollectionError do
+          assert_raises Bureau::Errors::EmptyCollectionError do
             subject.new(:collection => [])
           end
         end
@@ -106,7 +106,7 @@ module Bureau
 
       describe "row presenter" do
         it "initialize with default row presenter" do
-          assert_not_nil subject.new.row_presenter
+          refute_nil subject.new.row_presenter
         end
 
         it "initialize with optional row presenter" do
@@ -120,7 +120,7 @@ module Bureau
 
       describe "cell presenter" do
         it "initialize with default cell presenter" do
-          assert_not_nil subject.new.cell_presenter
+          refute_nil subject.new.cell_presenter
         end
 
         it "initialize with optional cell presenter" do
