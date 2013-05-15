@@ -10,21 +10,12 @@ module Bureau
         attr_reader :collection, :row_presenter, :cell_presenter, :renderer
 
         def initialize(options = {})
-          raise MissingDefaultAttributesError.new("Implement default_attributes") unless respond_to? :default_attributes
-          @attributes     = options.fetch(:attributes, default_attributes)
-
-          raise MissingDefaultCollectionError.new("Implement default_collection") unless respond_to? :default_collection
-          @collection     = options.fetch(:collection, default_collection)
-
-          raise EmptyCollectionError                                              if collection.empty?
-
           @row_presenter  = options.fetch(:row_presenter, default_row_presenter)
           @cell_presenter = options.fetch(:cell_presenter, default_cell_presenter)
           @renderer       = options.fetch(:renderer, default_renderer)
-
-          @collection     = collection.map do |item|
-            row_presenter.new(item)
-          end
+          @attributes     = options.fetch(:attributes, default_attributes)
+          @collection     = options.fetch(:collection, default_collection).map {|item| row_presenter.new(item)}
+          raise EmptyCollectionError if @collection.empty?
         end
 
         def header
@@ -67,6 +58,14 @@ module Bureau
 
         def default_renderer
           Class.new { include Bureau::Render::Base }
+        end
+
+        def default_attributes
+          raise MissingDefaultAttributesError.new("Implement default_attributes")
+        end
+
+        def default_collection
+          raise MissingDefaultCollectionError.new("Implement default_collection")
         end
 
       end
