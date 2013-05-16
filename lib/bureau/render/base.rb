@@ -33,7 +33,7 @@ module Bureau
         end
 
         def features
-          @features ||= Bureau::Features::Base.new(self)
+          @features ||= Bureau::Features::Collection.new(self)
         end
 
         # TODO: Integrationtest

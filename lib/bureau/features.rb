@@ -1,4 +1,4 @@
-require 'bureau/features/base'
+require 'bureau/features/collection'
 
 module Bureau
   module Features
