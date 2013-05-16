@@ -1,4 +1,5 @@
 require 'bureau/errors'
+require 'active_support/ordered_hash'
 
 module Bureau
   module Table
@@ -32,14 +33,16 @@ module Bureau
         end
 
         def attributes
-          if @attributes.kind_of?(Hash)
-            @attributes
-          else
-            @attributes.inject({}) do |hash, (key, value)|
-              hash[key] = default_attributes[key]
-              hash
+          ActiveSupport::OrderedHash.new().merge(
+            if @attributes.kind_of?(Hash)
+              @attributes
+            else
+              @attributes.inject({}) do |hash, (key, value)|
+                hash[key] = default_attributes[key]
+                hash
+              end
             end
-          end
+          )
         end
 
         def render
