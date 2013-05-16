@@ -157,11 +157,15 @@ module Bureau
             [Object.new, Object.new]
           end
 
+          # HOTFIX: To ensure correct attribute order in Ruby 1.8.7
+          # https://github.com/neopoly/bureau/issues/2
           def default_attributes
-            {
-              'foo' => 'FOO',
-              'bar' => 'BAR'
-            }
+            ActiveSupport::OrderedHash.new().merge(
+              {
+                'foo' => 'FOO',
+                'bar' => 'BAR'
+              }
+            )
           end
         end
       end
