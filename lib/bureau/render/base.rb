@@ -43,7 +43,7 @@ module Bureau
         private
 
         def default_features
-          [:filter, :docked]
+          [ Bureau::Features::Filter, Bureau::Features::Docked ]
         end
 
         def default_name

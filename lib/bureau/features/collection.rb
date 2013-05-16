@@ -1,10 +1,13 @@
 module Bureau
   module Features
     class Collection
-      attr_reader :renderer
+      attr_reader :renderer, :applied, :collection
+      private :collection
 
       def initialize(renderer)
-        @renderer = renderer
+        @renderer   = renderer
+        @applied    = []
+        @collection = []
       end
 
       def add(feature)
@@ -12,23 +15,10 @@ module Bureau
       end
 
       def apply!
-        collection.each do |c|
-          case c
-          when :filter then Filter.new(renderer).call 
-          when :docked then Docked.new(renderer).call
-          end
-          applied << c
+        collection.each do |feature|
+          feature.call(renderer)
+          applied << feature
         end
-      end
-
-      def applied
-        @applied ||= []
-      end
-
-      private
-
-      def collection
-        @collection ||= []
       end
     end
   end

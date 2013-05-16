@@ -36,20 +36,20 @@ module Bureau
         assert_equal [], renderer.collection.applied
         renderer.render
 
-        assert_equal [:filter, :docked], renderer.collection.applied
+        assert_equal renderer.features, renderer.collection.applied
       end
 
       it "apply specific collection" do
-        renderer = renderer_class.new(header, rows, :features => [:filter])
+        renderer = renderer_class.new(header, rows, :features => [Bureau::Features::Filter])
         renderer.render
 
-        assert_equal [:filter], renderer.collection.applied
+        assert_equal [Bureau::Features::Filter], renderer.collection.applied
       end
 
       it "feature filter" do
         assert_nil renderer.worksheet.auto_filter.range
 
-        renderer.collection.add(:filter)
+        renderer.collection.add(Bureau::Features::Filter)
         renderer.collection.apply!
 
         assert_equal "A1:B2", renderer.worksheet.auto_filter.range
@@ -61,7 +61,7 @@ module Bureau
         assert_equal 0, renderer.worksheet.sheet_view.pane.y_split
         assert_equal 0, renderer.worksheet.sheet_view.pane.x_split
 
-        renderer.collection.add(:docked)
+        renderer.collection.add(Bureau::Features::Docked)
         renderer.collection.apply!
 
         assert_equal 'B2', renderer.worksheet.sheet_view.pane.top_left_cell

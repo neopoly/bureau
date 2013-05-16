@@ -182,7 +182,14 @@ Bureau::Table::PeoplePresenter.new(:name => "MySpecialSheet")
 Only use specific features - or fallback to all avaliable features
 
 ```ruby
-Bureau::Table::PeoplePresenter.new(:features => [:filter, :docked])
+Bureau::Table::PeoplePresenter.new(:features => [ Bureau::Features::Filter, Bureau::Features::Docked ])
+```
+
+Use can also provide any Object that responds to +call+ as a feature
+
+```ruby
+filter = proc { |renderer| renderer.worksheet.auto_filter = renderer.worksheet.dimension.sqref }
+Bureau::Table::PeoplePresenter.new(:features => [ filter ])
 ```
 
 #### Implement a Row Presenter
