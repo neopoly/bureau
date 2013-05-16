@@ -3,17 +3,19 @@ module Bureau
     module Base
 
       module InstanceMethods
-        attr_reader :header, :rows, :name
+        attr_reader :header, :rows, :name, :features, :collection
 
         def initialize(header, rows, options = {})
-          @header       = header
-          @rows         = rows
-          @feature_list = options.fetch(:features, default_features)
-          @name         = options.fetch(:name, default_name)
+          @header     = header
+          @rows       = rows
+          @name       = options[:name] || default_name
+          @features   = options[:features] || default_features
+          @collection = Bureau::Features::Collection.new(self)
         end
 
         def render
-          apply_features!
+          features.each { |feature| collection.add(feature) }
+          collection.apply!
           to_xlsx
         end
 
@@ -33,25 +35,12 @@ module Bureau
           end
         end
 
-        def features
-          @features ||= Bureau::Features::Collection.new(self)
-        end
-
         # TODO: Integrationtest
         def to_xlsx
           package.to_stream().read
         end
 
         private
-
-        def feature_list
-          @feature_list
-        end
-
-        def apply_features!
-          feature_list.each { |feat| features.add(feat) }
-          features.apply!
-        end
 
         def default_features
           [:filter, :docked]

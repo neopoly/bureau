@@ -4,13 +4,23 @@ module Bureau
   module Table
     class BaseTest < TestCase
 
-      describe "name" do
+      describe "default_name" do
         it "return default sheet name" do
           assert_nil subject.new.name
         end
 
         it "accept optional name" do
           assert_equal 'MySheet', subject.new(:name => 'MySheet').name
+        end
+      end
+
+      describe "default_features" do
+        it "return default features" do
+          assert_nil subject.new.features
+        end
+
+        it "accept optional features" do
+          assert_equal [:filter], subject.new(:features => [:filter]).features
         end
       end
 

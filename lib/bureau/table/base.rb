@@ -8,16 +8,17 @@ module Bureau
       module InstanceMethods
         include Errors
 
-        attr_reader :collection, :row_presenter, :cell_presenter, :renderer, :name
+        attr_reader :collection, :row_presenter, :cell_presenter, :renderer, :name, :features
 
         def initialize(options = {})
-          @row_presenter  = options.fetch(:row_presenter, default_row_presenter)
-          @cell_presenter = options.fetch(:cell_presenter, default_cell_presenter)
-          @renderer       = options.fetch(:renderer, default_renderer)
-          @name           = options[:name]
-          @attributes     = options.fetch(:attributes, default_attributes)
-          @collection     = options.fetch(:collection, default_collection).map {|item| row_presenter.new(item)}
+          @row_presenter  = options[:row_presenter] || default_row_presenter
+          @cell_presenter = options[:cell_presenter] || default_cell_presenter
+          @renderer       = options[:renderer] || default_renderer
+          @attributes     = options[:attributes] || default_attributes
+          @collection     = (options[:collection] || default_collection).map {|item| row_presenter.new(item)}
           raise EmptyCollectionError if @collection.empty?
+          @name           = options[:name] || default_name
+          @features       = options[:features] || default_features
         end
 
         def header
@@ -47,10 +48,16 @@ module Bureau
         end
 
         def render
-          renderer.new(header, rows, :name => name).render
+          renderer.new(header, rows, :name => name, :features => features).render
         end
 
-        private
+        def default_name
+          nil
+        end
+
+        def default_features
+          nil
+        end
 
         def default_row_presenter
           Class.new { include Bureau::Row::Base }

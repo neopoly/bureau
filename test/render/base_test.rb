@@ -32,25 +32,25 @@ module Bureau
         assert_kind_of Axlsx::Worksheet, renderer.worksheet
       end
 
-      it "render - apply features" do
-        assert_equal [], renderer.features.applied
+      it "render - apply collection" do
+        assert_equal [], renderer.collection.applied
         renderer.render
 
-        assert_equal [:filter, :docked], renderer.features.applied
+        assert_equal [:filter, :docked], renderer.collection.applied
       end
 
-      it "apply specific features" do
+      it "apply specific collection" do
         renderer = renderer_class.new(header, rows, :features => [:filter])
         renderer.render
 
-        assert_equal [:filter], renderer.features.applied
+        assert_equal [:filter], renderer.collection.applied
       end
 
       it "feature filter" do
         assert_nil renderer.worksheet.auto_filter.range
 
-        renderer.features.add(:filter)
-        renderer.features.apply!
+        renderer.collection.add(:filter)
+        renderer.collection.apply!
 
         assert_equal "A1:B2", renderer.worksheet.auto_filter.range
       end
@@ -61,8 +61,8 @@ module Bureau
         assert_equal 0, renderer.worksheet.sheet_view.pane.y_split
         assert_equal 0, renderer.worksheet.sheet_view.pane.x_split
 
-        renderer.features.add(:docked)
-        renderer.features.apply!
+        renderer.collection.add(:docked)
+        renderer.collection.apply!
 
         assert_equal 'B2', renderer.worksheet.sheet_view.pane.top_left_cell
         assert_equal 'frozenSplit', renderer.worksheet.sheet_view.pane.state

@@ -79,6 +79,8 @@ Optional:
 
 * default_row_presenter
 * default_cell_presenter
+* default_renderer
+* default_name
 
 #### Implement a Table Presenter
 
@@ -101,14 +103,12 @@ module Bureau
         Person.all
       end
 
-      private
-
       def default_row_presenter
         Bureau::Row::PersonPresenter
       end
 
-      def default_cell_presenter
-        Bureau::Cell::PersonPresenter
+      def default_name
+        "MySheetName"
       end
 
     end
@@ -154,6 +154,18 @@ Optional cell presenter class
 Bureau::Table::PeoplePresenter.new(:cell_preseter => Bureau::Cell::PersonPresenter)
 ```
 
+Optinal sheet name
+
+```ruby
+Bureau::Table::PeoplePresenter.new(:name => "MySpecialSheet")
+```
+
+Specific features
+
+```ruby
+Bureau::Table::PeoplePresenter.new(:features => [:filter, :docked])
+```
+
 #### Implement a Row Presenter
 
 Each item in your collection get wrapped in a Row Presenter.
@@ -176,20 +188,6 @@ module Bureau
         object.lastname.lowercase
       end
 
-    end
-  end
-end
-```
-
-#### Implement a optional Cell Presenter
-
-Each attribute in your Row Presenter get wrapped in a Cell Presenter.
-
-```ruby
-module Bureau
-  module Cell
-    class PersonPresenter
-      include Bureau::Cell::Base
     end
   end
 end
