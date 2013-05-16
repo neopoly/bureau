@@ -43,7 +43,8 @@ module Bureau
       it "render - apply features" do
         assert_equal [], renderer.features.applied
         renderer.render
-        assert_equal [:filter], renderer.features.applied
+
+        assert_equal [:filter, :docked], renderer.features.applied
       end
 
       it "feature filter" do
@@ -55,6 +56,21 @@ module Bureau
         assert_equal "A1:B2", renderer.worksheet.auto_filter.range
       end
 
+      it "feature docked" do
+        assert_nil renderer.worksheet.sheet_view.pane.top_left_cell
+        assert_nil renderer.worksheet.sheet_view.pane.state
+        assert_equal 0, renderer.worksheet.sheet_view.pane.y_split
+        assert_equal 0, renderer.worksheet.sheet_view.pane.x_split
+
+        renderer.features.add(:docked)
+        renderer.features.apply!
+
+        assert_equal 'B2', renderer.worksheet.sheet_view.pane.top_left_cell
+        assert_equal 'frozenSplit', renderer.worksheet.sheet_view.pane.state
+        assert_equal 1, renderer.worksheet.sheet_view.pane.y_split
+        assert_equal 0, renderer.worksheet.sheet_view.pane.x_split
+      end
+
       # TODO: Integrationtest - Open xlsx again
       it "render - return xlsx" do
         assert renderer.render
@@ -62,23 +78,24 @@ module Bureau
 
       private
 
-      def renderer
-        if @instance
-          @instance
-        else
-          header = [cell("foo"), cell(1)]
-          rows   = [header]
+      def renderer_class
+        Class.new { include Bureau::Render::Base }
+      end
 
-          @instance = Class.new do
-            include Bureau::Render::Base
-          end.new(:header => header, :rows => rows)
-        end
+      def renderer
+        @instance ||= renderer_class.new(:header => header, :rows => rows)
+      end
+
+      def header
+        @header ||= [cell("foo"), cell(1)]
+      end
+
+      def rows
+        @rows ||= [header]
       end
 
       def cell(item)
-        Class.new do
-          include Bureau::Cell::Base
-        end.new(item)
+        Class.new { include Bureau::Cell::Base }.new(item)
       end
 
     end

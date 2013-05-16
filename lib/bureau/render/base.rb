@@ -12,6 +12,7 @@ module Bureau
 
         def render
           features.add(:filter)
+          features.add(:docked)
           features.apply!
           to_xlsx
         end
