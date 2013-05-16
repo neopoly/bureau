@@ -2,6 +2,7 @@ require "bureau/version"
 
 require 'axlsx'
 
+require 'bureau/features'
 require 'bureau/cell'
 require 'bureau/render'
 require 'bureau/row'
