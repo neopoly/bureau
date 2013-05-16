@@ -27,9 +27,8 @@ module Bureau
 
         def rows
           collection.map do |person|
-            attributes.inject([]) do |columns, (key, value)|
-              columns << cell_presenter.new(person.send(key))
-              columns
+            attributes.map do |key, value|
+              cell_presenter.new(person.send(key))
             end
           end
         end
