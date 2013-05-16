@@ -7,7 +7,7 @@ module Bureau
       it "return header" do
         renderer = Class.new do
           include Bureau::Render::Base
-        end.new(:header => [1,2])
+        end.new([1,2],[3,4])
 
         assert_equal [1,2], renderer.header
       end
@@ -15,17 +15,9 @@ module Bureau
       it "return rows" do
         renderer = Class.new do
           include Bureau::Render::Base
-        end.new(:rows => [1,2])
+        end.new([1,2],[3,4])
 
-        assert_equal [1,2], renderer.rows
-      end
-
-      it "provide render method" do
-        renderer = Class.new do
-          include Bureau::Render::Base
-        end.new
-
-        assert renderer.respond_to? :render
+        assert_equal [3,4], renderer.rows
       end
 
       it "return a package" do
@@ -45,6 +37,13 @@ module Bureau
         renderer.render
 
         assert_equal [:filter, :docked], renderer.features.applied
+      end
+
+      it "apply specific features" do
+        renderer = renderer_class.new(header, rows, :features => [:filter])
+        renderer.render
+
+        assert_equal [:filter], renderer.features.applied
       end
 
       it "feature filter" do
@@ -83,7 +82,7 @@ module Bureau
       end
 
       def renderer
-        @instance ||= renderer_class.new(:header => header, :rows => rows)
+        @instance ||= renderer_class.new(header, rows)
       end
 
       def header

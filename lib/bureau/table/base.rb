@@ -46,7 +46,7 @@ module Bureau
         end
 
         def render
-          renderer.new(:header => header, :rows => rows).render
+          renderer.new(header, rows).render
         end
 
         private
