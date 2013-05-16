@@ -4,6 +4,16 @@ module Bureau
   module Table
     class BaseTest < TestCase
 
+      describe "name" do
+        it "return default sheet name" do
+          assert_nil subject.new.name
+        end
+
+        it "accept optional name" do
+          assert_equal 'MySheet', subject.new(:name => 'MySheet').name
+        end
+      end
+
       describe "attributes" do
         it "raises if default_attributes are not defined" do
           assert_raises Bureau::Errors::MissingDefaultAttributesError do

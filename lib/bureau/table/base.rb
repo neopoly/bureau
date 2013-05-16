@@ -8,12 +8,13 @@ module Bureau
       module InstanceMethods
         include Errors
 
-        attr_reader :collection, :row_presenter, :cell_presenter, :renderer
+        attr_reader :collection, :row_presenter, :cell_presenter, :renderer, :name
 
         def initialize(options = {})
           @row_presenter  = options.fetch(:row_presenter, default_row_presenter)
           @cell_presenter = options.fetch(:cell_presenter, default_cell_presenter)
           @renderer       = options.fetch(:renderer, default_renderer)
+          @name           = options[:name]
           @attributes     = options.fetch(:attributes, default_attributes)
           @collection     = options.fetch(:collection, default_collection).map {|item| row_presenter.new(item)}
           raise EmptyCollectionError if @collection.empty?
@@ -46,7 +47,7 @@ module Bureau
         end
 
         def render
-          renderer.new(header, rows).render
+          renderer.new(header, rows, :name => name).render
         end
 
         private

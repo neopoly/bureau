@@ -70,6 +70,16 @@ module Bureau
         assert_equal 0, renderer.worksheet.sheet_view.pane.x_split
       end
 
+      it "set default sheet name" do
+        assert_equal "Sheet", renderer.worksheet.name
+      end
+
+      it "set optional sheet name" do
+        renderer = renderer_class.new(header, rows, :name => "MySheet")
+
+        assert_equal "MySheet", renderer.worksheet.name
+      end
+
       # TODO: Integrationtest - Open xlsx again
       it "render - return xlsx" do
         assert renderer.render

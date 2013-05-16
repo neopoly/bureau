@@ -3,12 +3,13 @@ module Bureau
     module Base
 
       module InstanceMethods
-        attr_reader :header, :rows, :f
+        attr_reader :header, :rows, :name
 
         def initialize(header, rows, options = {})
-          @header = header
-          @rows   = rows
-          @f      = options.fetch(:features, default_features)
+          @header       = header
+          @rows         = rows
+          @feature_list = options.fetch(:features, default_features)
+          @name         = options.fetch(:name, default_name)
         end
 
         def render
@@ -26,7 +27,7 @@ module Bureau
 
         # TODO: Support multiple worksheets
         def worksheet
-          @worksheet ||= workbook.add_worksheet do |sheet|
+          @worksheet ||= workbook.add_worksheet(:name => name) do |sheet|
             sheet.add_row header.map { |column| column.value }
             rows.each { |row| sheet.add_row row.map { |column| column.value } }
           end
@@ -43,13 +44,21 @@ module Bureau
 
         private
 
+        def feature_list
+          @feature_list
+        end
+
         def apply_features!
-          f.each { |feat| features.add(feat) }
+          feature_list.each { |feat| features.add(feat) }
           features.apply!
         end
 
         def default_features
           [:filter, :docked]
+        end
+
+        def default_name
+          "Sheet"
         end
       end
 
