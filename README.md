@@ -68,7 +68,7 @@ end
 
 ### Long version
 
-Create a class, include Bureau::Table::Base and provide 4 hook methods.
+Create a class, include Bureau::Table::Base and provide hook methods.
 
 Required:
 
@@ -81,8 +81,9 @@ Optional:
 * default_cell_presenter
 * default_renderer
 * default_name
+* default_features
 
-#### Implement a Table Presenter
+#### Implement a Table Presenter with hook methods
 
 ```ruby
 module Bureau
@@ -107,8 +108,20 @@ module Bureau
         Bureau::Row::PersonPresenter
       end
 
+      def default_cell_presenter
+        Bureau::Cell::PersonPresenter
+      end
+
+      def default_renderer
+        Bureau::Render::PersonPresenter
+      end
+
       def default_name
         "MySheetName"
+      end
+    
+      def default_features
+        [:colorize_cells_in_green_and_pink]
       end
 
     end
@@ -116,7 +129,7 @@ module Bureau
 end
 ```
 
-#### Examples
+#### Or pass hooks during runtime
 
 All people with default attributes
 
@@ -154,13 +167,19 @@ Optional cell presenter class
 Bureau::Table::PeoplePresenter.new(:cell_preseter => Bureau::Cell::PersonPresenter)
 ```
 
-Optinal sheet name
+Optional renderer class
+
+```ruby
+Bureau::Table::PeoplePresenter.new(:renderer => Bureau::Renderer::Person)
+```
+
+Optional sheet name
 
 ```ruby
 Bureau::Table::PeoplePresenter.new(:name => "MySpecialSheet")
 ```
 
-Specific features
+Only use specific features - or fallback to all avaliable features
 
 ```ruby
 Bureau::Table::PeoplePresenter.new(:features => [:filter, :docked])
@@ -192,6 +211,18 @@ module Bureau
   end
 end
 ```
+
+#### Implement a Cell Presenter
+
+tbd
+
+#### Implement a Renderer
+
+tbd
+
+#### Implement own Features
+
+tbd
 
 ## Contributing
 
