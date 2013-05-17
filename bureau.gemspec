@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["jo@neopoly.de"]
   spec.description   = %q{Bureau provide a simple interface to build custom xlsx files.}
   spec.summary       = %q{Bureau is based on axlsx.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/neopoly/bureau"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
