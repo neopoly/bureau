@@ -5,96 +5,87 @@ module Bureau
     class BaseTest < TestCase
 
       describe "default_name" do
-        it "return default sheet name" do
+        it "returns default sheet name" do
           assert_nil subject.new.name
         end
 
-        it "accept optional name" do
+        it "accepts optional name" do
           assert_equal 'MySheet', subject.new(:name => 'MySheet').name
         end
       end
 
       describe "default_features" do
-        it "return default features" do
+        it "returns default features" do
           assert_nil subject.new.features
         end
 
-        it "accept optional features" do
+        it "accepts optional features" do
           assert_equal [:filter], subject.new(:features => [:filter]).features
         end
       end
 
       describe "columns" do
-        it "raises if default_columns are not defined" do
+        it "raises without default_columns" do
           assert_raises Bureau::Errors::MissingDefaultColumnsError do
             subject_without_default_columns.new
           end
         end
 
-        it "return default columns" do
-          expected = {
-              'foo' => 'FOO',
-              'bar' => 'BAR'
-            }
-
-          assert_equal expected, subject.new.columns
+        it "returns default columns" do
+          assert_equal Bureau::Table::BaseTest.columns, subject.new.columns
         end
 
-        it "return specific columns" do
-          expected = { 'foo' => 'FOO' }
+        it "acceptss optional columns" do
+          columns = [Bureau::Column::Base.new('foo','FOO',:string)]
 
-          assert_equal expected, subject.new(:columns => ['foo']).columns
-        end
-
-        it "return specific columns and rename them" do
-          expected = { 'foo' => 'F00' }
-
-          assert_equal expected, subject.new(:columns => {'foo' => 'F00'}).columns
+          assert_equal columns, subject.new(:columns => columns).columns
         end
       end
 
       describe "header" do
-        it "return default columns" do
-          instance = subject.new
+        it "wraps columns in cell presenter" do
+          columns  = [
+            Bureau::Column::Base.new('foo','FOO',:string),
+            Bureau::Column::Base.new('bar','BAR'),
+            Bureau::Column::Base.new('baz')
+          ]
 
-          assert_equal 2, instance.header.count
+          instance = subject.new(:columns => columns)
 
-          assert_equal 'FOO', instance.header[0].value
-          assert_equal 'String', instance.header[0].type
+          assert_equal 3, instance.headers.size
 
-          assert_equal 'BAR', instance.header[1].value
-          assert_equal 'String', instance.header[1].type
-        end
+          assert_equal 'FOO', instance.headers[0].value
+          assert_equal :string, instance.headers[0].type
 
-        it "return specific columns" do
-          instance = subject.new(:columns => ['foo'])
+          assert_equal 'BAR', instance.headers[1].value
+          assert_equal nil, instance.headers[1].type
 
-          assert_equal 1, instance.header.count
-          assert_equal 'FOO', instance.header[0].value
-          assert_equal 'String', instance.header[0].type
-        end
-
-        it "return specific columns and rename them" do
-          expected = { 'foo' => 'F00' }
-          instance = subject.new(:columns => {'foo' => 'F00'})
-
-          assert_equal 1, instance.header.count
-          assert_equal 'F00', instance.header[0].value
-          assert_equal 'String', instance.header[0].type
+          assert_equal 'Baz', instance.headers[2].value
+          assert_equal nil, instance.headers[2].type
         end
       end
 
       describe "rows" do
-        it "return rows" do
-          row = subject.new(:row_presenter => row_presenter).rows[0]
-  
-          cell = row[0]
-          assert_equal 'foo', cell.value
-          assert_equal 'String', cell.type
-  
-          cell = row[1]
-          assert_equal 1, cell.value
-          assert_equal 'Number', cell.type
+        it "wraps columns in cell presenter" do
+          collection = [Object.new]
+          columns    = [
+            Bureau::Column::Base.new('foo','FOO',:string),
+            Bureau::Column::Base.new('bar','BAR'),
+            Bureau::Column::Base.new('baz')
+          ]
+
+          instance = subject.new(:columns => columns, :collection => collection, :row_presenter => row_presenter)
+
+          assert_equal 1, instance.rows.size
+
+          assert_equal 'foo', instance.rows[0][0].value
+          assert_equal :string, instance.rows[0][0].type
+
+          assert_equal 1, instance.rows[0][1].value
+          assert_equal nil, instance.rows[0][1].type
+
+          assert_equal 'baz', instance.rows[0][2].value
+          assert_equal nil, instance.rows[0][2].type
         end
       end
 
@@ -176,12 +167,16 @@ module Bureau
           end
 
           def default_columns
-            {
-              'foo' => 'FOO',
-              'bar' => 'BAR'
-            }
+            ::Bureau::Table::BaseTest.columns
           end
         end
+      end
+
+      def self.columns
+        @columns ||= [
+          Bureau::Column::Base.new('foo','FOO',:string),
+          Bureau::Column::Base.new('bar','BAR')
+        ]
       end
 
       def row_presenter
@@ -194,6 +189,10 @@ module Bureau
 
           def bar
             1
+          end
+
+          def baz
+            'baz'
           end
         end
       end

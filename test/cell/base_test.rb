@@ -13,20 +13,20 @@ module Bureau
       end
 
       describe "type" do
-        it "return String if value is kind of string" do
+        it "return given type" do
+          cell_presenter = Class.new do
+            include Bureau::Cell::Base
+          end.new("foo", :string)
+
+          assert_equal :string, cell_presenter.type
+        end
+
+        it "return nil" do
           cell_presenter = Class.new do
             include Bureau::Cell::Base
           end.new("foo")
 
-          assert_equal "String", cell_presenter.type
-        end
-
-        it "return Number if value is kind of integer" do
-          cell_presenter = Class.new do
-            include Bureau::Cell::Base
-          end.new(1)
-
-          assert_equal "Number", cell_presenter.type
+          assert_nil cell_presenter.type
         end
       end
 

@@ -8,7 +8,7 @@ module Bureau
       module InstanceMethods
         include Errors
 
-        attr_reader :collection, :row_presenter, :cell_presenter, :renderer, :name, :features
+        attr_reader :collection, :row_presenter, :cell_presenter, :renderer, :name, :features, :columns
 
         def initialize(options = {})
           @row_presenter  = options[:row_presenter] || default_row_presenter
@@ -21,25 +21,16 @@ module Bureau
           @features       = options[:features] || default_features
         end
 
-        def header
-          columns.map { |key, value| cell_presenter.new(value) }
+        def headers
+          columns.map do |column|
+            cell_presenter.new(column.label, column.type)
+          end
         end
 
         def rows
           collection.map do |person|
-            columns.map do |key, value|
-              cell_presenter.new(person.send(key))
-            end
-          end
-        end
-
-        def columns
-          if @columns.kind_of?(Hash)
-            @columns
-          else
-            @columns.inject({}) do |hash, (key, value)|
-              hash[key] = default_columns[key]
-              hash
+            columns.map do |column|
+              cell_presenter.new(person.send(column.key), column.type)
             end
           end
         end

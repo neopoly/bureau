@@ -3,14 +3,11 @@ module Bureau
     module Base
 
       module InstanceMethods
-        attr_reader :value
+        attr_reader :value, :type
 
-        def initialize(value)
+        def initialize(value, type = nil)
           @value = value
-        end
-
-        def type
-          value.kind_of?(Integer)? "Number" : "String"
+          @type  = type
         end
       end
 
