@@ -35,8 +35,9 @@ module Bureau
           end
         end
 
+        # TODO: Test me!
         def render
-          renderer.new(header, rows, :name => name, :features => features).render
+          renderer.new(headers, rows, :name => name, :features => features).render
         end
 
         def default_name
