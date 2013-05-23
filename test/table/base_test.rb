@@ -158,9 +158,7 @@ module Bureau
         end
 
         it "initialize with optional renderer" do
-          renderer = Class.new do
-            include Bureau::Render::Base
-          end
+          renderer = Bureau::Render::Base
 
           instance = subject.new(:renderer => renderer)
 

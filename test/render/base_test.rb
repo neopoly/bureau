@@ -5,19 +5,11 @@ module Bureau
     class BaseTest < TestCase
 
       it "return header" do
-        renderer = Class.new do
-          include Bureau::Render::Base
-        end.new([1,2],[3,4])
-
-        assert_equal [1,2], renderer.header
+        assert_equal [1,2], Bureau::Render::Base.new([1,2],[3,4]).header
       end
 
       it "return rows" do
-        renderer = Class.new do
-          include Bureau::Render::Base
-        end.new([1,2],[3,4])
-
-        assert_equal [3,4], renderer.rows
+        assert_equal [3,4], Bureau::Render::Base.new([1,2],[3,4]).rows
       end
 
       it "return a package" do
@@ -88,7 +80,7 @@ module Bureau
       private
 
       def renderer_class
-        Class.new { include Bureau::Render::Base }
+        Bureau::Render::Base
       end
 
       def renderer

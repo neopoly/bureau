@@ -67,7 +67,7 @@ module Bureau
         end
 
         def default_renderer
-          Class.new { include Bureau::Render::Base }
+          Bureau::Render::Base
         end
 
         def default_attributes
