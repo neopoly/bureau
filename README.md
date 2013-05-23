@@ -24,19 +24,19 @@ Or install it yourself as:
 
 #### Table
 
-Create a class, include Bureau::Table::Base and provide default_attributes and default_collection method.
+Create a class, include Bureau::Table::Base and provide default_collumns and default_collection method.
 
 ```ruby
 class PeopleTable
 
   include Bureau::Table::Base
 
-  def default_attributes
-    {
-      'firstname' => 'First name',
-      'lastname' => 'Last name',
-      'birthday' => 'Birthday'
-    }
+  def default_columns
+    [
+      Bureau::Column::Base.new('firstname', 'First name'),
+      Bureau::Column::Base.new('lastname'),
+      Bureau::Column::Base.new('birthday', 'Birthday', :integer)
+    ]
   end
 
   def default_collection
@@ -68,7 +68,7 @@ end
 
 Required:
 
-* default_attributes
+* default_columns
 * default_collection
 
 Optional:
@@ -86,12 +86,12 @@ class PeopleTable
 
   include Bureau::Table::Base
 
-  def default_attributes
-    {
-      'firstname' => 'First name',
-      'lastname' => 'Last name',
-      'birthday' => 'Birthday'
-    }
+  def default_columns
+    [
+      Bureau::Column::Base.new('firstname', 'First name'),
+      Bureau::Column::Base.new('lastname'),
+      Bureau::Column::Base.new('birthday', 'Birthday', :integer)
+    ]
   end
 
   def default_collection
@@ -123,31 +123,25 @@ end
 
 #### Or pass hooks during runtime
 
-All people with default attributes
+Overwrite columns
 
 ```ruby
-PeopleTable.new
+columns = [
+  Bureau::Column::Base.new('firstname', 'First name'),
+  Bureau::Column::Base.new('lastname'),
+  Bureau::Column::Base.new('birthday', 'Birthday', :integer)
+]
+
+PeopleTable.new(:columns => columns)
 ```
 
-All people with specific attributes
-
-```ruby
-PeopleTable.new(:attributes => [:firstname, :lastname])
-```
-
-All people with specific attributes and custom names
-
-```ruby
-PeopleTable.new(:attributes => {:firstname => 'First', :lastname => 'Last'})
-```
-
-Specific people with default attributes
+Overwrite collection
 
 ```ruby
 PeopleTable.new(:collection => [Person.first, Person.last])
 ```
 
-Optional row presenter class
+Overwrite row presenter
 
 ```ruby
 class PersonRow
@@ -157,7 +151,7 @@ end
 PeopleTable.new(:row_preseter => PersonRow)
 ```
 
-Optional cell presenter class
+Overwrite cell presenter
 
 ```ruby
 class PersonCell
@@ -167,7 +161,7 @@ end
 PeopleTable.new(:cell_preseter => PersonCell)
 ```
 
-Optional renderer class
+Overwrite renderer
 
 ```ruby
 class PersonRenderer < Bureau::Renderer::Base
@@ -176,7 +170,7 @@ end
 PeopleTable.new(:renderer => PersonRenderer)
 ```
 
-Optional sheet name
+Define sheet name
 
 ```ruby
 PeopleTable.new(:name => "MySpecialSheet")
@@ -192,7 +186,41 @@ Use can also provide any Object that responds to +call+ as a feature
 
 ```ruby
 filter = proc { |renderer| renderer.worksheet.auto_filter = renderer.worksheet.dimension.sqref }
+
 PeopleTable.new(:features => [ filter ])
+```
+
+#### Column
+
+```ruby
+c1 = Bureau::Column::Base.new('birthday', 'Birthday', :integer)
+
+c1.key    # => birthday
+c1.value  # => Birthday
+c1.type   # => :interger
+
+c2 = Bureau::Column::Base.new('birthday', 'Birthday')
+
+c2.key    # => birthday
+c2.value  # => Birthday
+c2.type   # => nil      - determine type by class of value
+
+c3 = Bureau::Column::Base.new('birthday')
+
+c3.key    # => birthday
+c3.value  # => Birthday - capitalize key
+c3.type   # => nil      - determine type by class of value
+```
+
+Valid column types are:
+
+```ruby
+:date
+:time
+:boolean
+:integer
+:float
+:string
 ```
 
 #### Row
