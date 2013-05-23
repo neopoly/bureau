@@ -10,6 +10,10 @@ module Bureau
         @type  = type
       end
 
+      def ==(other)
+        key == other.key && label == other.label && type == other.type
+      end
+
     end
   end
 end

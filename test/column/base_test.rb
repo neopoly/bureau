@@ -22,6 +22,16 @@ module Bureau
         assert_equal nil, klass.new('baz').type
       end
 
+      it "is equal" do
+        assert_equal klass.new('foo','FOO',:string), klass.new('foo','FOO',:string)
+      end
+
+      it "is not equal" do
+        refute_equal klass.new('foo','FOO',:string), klass.new('foo','FOO', :integer)
+        refute_equal klass.new('foo','FOO',:string), klass.new('foo','FOO')
+        refute_equal klass.new('foo','FOO',:string), klass.new('foo')
+      end
+
       private
 
       def klass
