@@ -197,7 +197,7 @@ c1 = Bureau::Column::Base.new('birthday', 'Birthday', :integer)
 
 c1.key    # => birthday
 c1.value  # => Birthday
-c1.type   # => :interger
+c1.type   # => :integer
 
 c2 = Bureau::Column::Base.new('birthday', 'Birthday')
 
