@@ -22,12 +22,12 @@ Or install it yourself as:
 
 ### Short version
 
-#### Implement a Table Presenter
+#### Table
 
 Create a class, include Bureau::Table::Base and provide default_attributes and default_collection method.
 
 ```ruby
-class PeopleTablePresenter
+class PeopleTable
 
   include Bureau::Table::Base
 
@@ -53,7 +53,7 @@ class SomeController < ApplicationController
 
   def export
     respond_to do |format|
-      format.xlsx { render :text => PeopleTablePresenter.new.render }
+      format.xlsx { render :text => PeopleTable.new.render }
     end
   end
 
@@ -79,10 +79,10 @@ Optional:
 * default_name
 * default_features
 
-#### Implement a Table Presenter with hook methods
+#### Table
 
 ```ruby
-class PeopleTablePresenter
+class PeopleTable
 
   include Bureau::Table::Base
 
@@ -99,11 +99,11 @@ class PeopleTablePresenter
   end
 
   def default_row_presenter
-    PersonRowPresenter
+    PersonRow
   end
 
   def default_cell_presenter
-    PersonCellPresenter
+    PersonCell
   end
 
   def default_renderer
@@ -126,45 +126,45 @@ end
 All people with default attributes
 
 ```ruby
-PeopleTablePresenter.new
+PeopleTable.new
 ```
 
 All people with specific attributes
 
 ```ruby
-PeopleTablePresenter.new(:attributes => [:firstname, :lastname])
+PeopleTable.new(:attributes => [:firstname, :lastname])
 ```
 
 All people with specific attributes and custom names
 
 ```ruby
-PeopleTablePresenter.new(:attributes => {:firstname => 'First', :lastname => 'Last'})
+PeopleTable.new(:attributes => {:firstname => 'First', :lastname => 'Last'})
 ```
 
 Specific people with default attributes
 
 ```ruby
-PeopleTablePresenter.new(:collection => [Person.first, Person.last])
+PeopleTable.new(:collection => [Person.first, Person.last])
 ```
 
 Optional row presenter class
 
 ```ruby
-class PersonRowPresenter
+class PersonRow
   include Bureau::Row::Base
 end
 
-PeopleTablePresenter.new(:row_preseter => PersonRowPresenter)
+PeopleTable.new(:row_preseter => PersonRow)
 ```
 
 Optional cell presenter class
 
 ```ruby
-class PersonCellPresenter
+class PersonCell
   include Bureau::Cell::Base
 end
 
-PeopleTablePresenter.new(:cell_preseter => PersonCellPresenter)
+PeopleTable.new(:cell_preseter => PersonCell)
 ```
 
 Optional renderer class
@@ -173,38 +173,38 @@ Optional renderer class
 class PersonRenderer < Bureau::Renderer::Base
 end
 
-PeopleTablePresenter.new(:renderer => PersonRenderer)
+PeopleTable.new(:renderer => PersonRenderer)
 ```
 
 Optional sheet name
 
 ```ruby
-PeopleTablePresenter.new(:name => "MySpecialSheet")
+PeopleTable.new(:name => "MySpecialSheet")
 ```
 
 Only use specific features - or fallback to all avaliable features
 
 ```ruby
-PeopleTablePresenter.new(:features => [ Bureau::Features::Filter, Bureau::Features::Docked ])
+PeopleTable.new(:features => [ Bureau::Features::Filter, Bureau::Features::Docked ])
 ```
 
 Use can also provide any Object that responds to +call+ as a feature
 
 ```ruby
 filter = proc { |renderer| renderer.worksheet.auto_filter = renderer.worksheet.dimension.sqref }
-PeopleTablePresenter.new(:features => [ filter ])
+PeopleTable.new(:features => [ filter ])
 ```
 
-#### Implement a Row Presenter
+#### Row
 
-Each item in your collection get wrapped in a Row Presenter.
+Each item in your collection get wrapped in a Row.
 In this case object is a person instance.
 
 Methods that are not defined here will be forwared to object.
 In this case birthday is accessible through object.
 
 ```ruby
-class PersonRowPresenter
+class PersonRow
   include Bureau::Row::Base
 
   def firstname
@@ -217,15 +217,15 @@ class PersonRowPresenter
 end
 ```
 
-#### Implement a Cell Presenter
+#### Cell
 
 tbd
 
-#### Implement a Renderer
+#### Renderer
 
 tbd
 
-#### Implement own Features
+#### Features
 
 tbd
 
