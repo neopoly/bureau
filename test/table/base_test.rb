@@ -24,37 +24,37 @@ module Bureau
         end
       end
 
-      describe "attributes" do
-        it "raises if default_attributes are not defined" do
-          assert_raises Bureau::Errors::MissingDefaultAttributesError do
-            subject_without_default_attributes.new
+      describe "columns" do
+        it "raises if default_columns are not defined" do
+          assert_raises Bureau::Errors::MissingDefaultColumnsError do
+            subject_without_default_columns.new
           end
         end
 
-        it "return default attributes" do
+        it "return default columns" do
           expected = {
               'foo' => 'FOO',
               'bar' => 'BAR'
             }
 
-          assert_equal expected, subject.new.attributes
+          assert_equal expected, subject.new.columns
         end
 
-        it "return specific attributes" do
+        it "return specific columns" do
           expected = { 'foo' => 'FOO' }
 
-          assert_equal expected, subject.new(:attributes => ['foo']).attributes
+          assert_equal expected, subject.new(:columns => ['foo']).columns
         end
 
-        it "return specific attributes and rename them" do
+        it "return specific columns and rename them" do
           expected = { 'foo' => 'F00' }
 
-          assert_equal expected, subject.new(:attributes => {'foo' => 'F00'}).attributes
+          assert_equal expected, subject.new(:columns => {'foo' => 'F00'}).columns
         end
       end
 
       describe "header" do
-        it "return default attributes" do
+        it "return default columns" do
           instance = subject.new
 
           assert_equal 2, instance.header.count
@@ -66,17 +66,17 @@ module Bureau
           assert_equal 'String', instance.header[1].type
         end
 
-        it "return specific attributes" do
-          instance = subject.new(:attributes => ['foo'])
+        it "return specific columns" do
+          instance = subject.new(:columns => ['foo'])
 
           assert_equal 1, instance.header.count
           assert_equal 'FOO', instance.header[0].value
           assert_equal 'String', instance.header[0].type
         end
 
-        it "return specific attributes and rename them" do
+        it "return specific columns and rename them" do
           expected = { 'foo' => 'F00' }
-          instance = subject.new(:attributes => {'foo' => 'F00'})
+          instance = subject.new(:columns => {'foo' => 'F00'})
 
           assert_equal 1, instance.header.count
           assert_equal 'F00', instance.header[0].value
@@ -175,15 +175,11 @@ module Bureau
             [Object.new, Object.new]
           end
 
-          # HOTFIX: To ensure correct attribute order in Ruby 1.8.7
-          # https://github.com/neopoly/bureau/issues/2
-          def default_attributes
-            ActiveSupport::OrderedHash.new().merge(
-              {
-                'foo' => 'FOO',
-                'bar' => 'BAR'
-              }
-            )
+          def default_columns
+            {
+              'foo' => 'FOO',
+              'bar' => 'BAR'
+            }
           end
         end
       end
@@ -205,12 +201,12 @@ module Bureau
       def subject_without_default_collection
         Class.new do
           include Bureau::Table::Base
-          def default_attributes
+          def default_columns
           end
         end
       end
 
-      def subject_without_default_attributes
+      def subject_without_default_columns
         Class.new do
           include Bureau::Table::Base
           def default_collection
@@ -225,7 +221,7 @@ module Bureau
             []
           end
 
-          def default_attributes
+          def default_columns
           end
         end
       end

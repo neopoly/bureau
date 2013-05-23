@@ -14,7 +14,7 @@ module Bureau
           @row_presenter  = options[:row_presenter] || default_row_presenter
           @cell_presenter = options[:cell_presenter] || default_cell_presenter
           @renderer       = options[:renderer] || default_renderer
-          @attributes     = options[:attributes] || default_attributes
+          @columns        = options[:columns] || default_columns
           @collection     = (options[:collection] || default_collection).map {|item| row_presenter.new(item)}
           raise EmptyCollectionError if @collection.empty?
           @name           = options[:name] || default_name
@@ -22,28 +22,26 @@ module Bureau
         end
 
         def header
-          attributes.map { |key, value| cell_presenter.new(value) }
+          columns.map { |key, value| cell_presenter.new(value) }
         end
 
         def rows
           collection.map do |person|
-            attributes.map do |key, value|
+            columns.map do |key, value|
               cell_presenter.new(person.send(key))
             end
           end
         end
 
-        def attributes
-          ActiveSupport::OrderedHash.new().merge(
-            if @attributes.kind_of?(Hash)
-              @attributes
-            else
-              @attributes.inject({}) do |hash, (key, value)|
-                hash[key] = default_attributes[key]
-                hash
-              end
+        def columns
+          if @columns.kind_of?(Hash)
+            @columns
+          else
+            @columns.inject({}) do |hash, (key, value)|
+              hash[key] = default_columns[key]
+              hash
             end
-          )
+          end
         end
 
         def render
@@ -70,8 +68,8 @@ module Bureau
           Bureau::Render::Base
         end
 
-        def default_attributes
-          raise MissingDefaultAttributesError.new("Implement default_attributes")
+        def default_columns
+          raise MissingDefaultColumnsError.new("Implement default_columns")
         end
 
         def default_collection
