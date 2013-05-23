@@ -29,8 +29,14 @@ module Bureau
       # TODO: Support multiple worksheets
       def worksheet
         @worksheet ||= workbook.add_worksheet(:name => name) do |sheet|
-          sheet.add_row header.map { |column| column.value }
-          rows.each { |row| sheet.add_row row.map { |column| column.value } }
+          sheet.add_row header.map(&:value)
+
+          rows.each do |row|
+            values = row.map(&:value)
+            types  = row.map(&:type)
+
+            sheet.add_row values, :types => types
+          end
         end
       end
 
