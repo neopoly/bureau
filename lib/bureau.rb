@@ -1,7 +1,3 @@
-def include_engine?
-  defined?(Rails) && Rails.version.scan(/(^\d)/).flatten[0].to_i >= 3
-end
-
 require "bureau/version"
 
 require 'axlsx'
@@ -14,7 +10,7 @@ require 'bureau/cell'
 require 'bureau/features'
 require 'bureau/render'
 
-require "bureau/engine" if include_engine?
+require "bureau/engine"
 
 module Bureau
 end
