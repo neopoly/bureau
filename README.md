@@ -68,9 +68,7 @@ end
 class SomeController < ApplicationController
 
   def export
-    respond_to do |format|
-      send_data PeopleTable.new.render, :type => 'application/ms-excel', :disposition => 'inline', :filename => 'my_file.xlsx'
-    end
+    send_data PeopleTable.new.render, :type => 'application/ms-excel', :disposition => 'inline', :filename => 'file.xlsx'
   end
 
 end
