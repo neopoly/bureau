@@ -46,7 +46,9 @@ class PeopleTable
 end
 ```
 
-Bureau registers a xlsx mime type. You can render xlsx direct from your rails controller.
+#### Rails >= 3
+
+Bureau use a Rails::Engine to register a xlsx mime type. You can render xlsx direct from your rails controller.
 
 ```ruby
 class SomeController < ApplicationController
@@ -54,6 +56,20 @@ class SomeController < ApplicationController
   def export
     respond_to do |format|
       format.xlsx { render :text => PeopleTable.new.render }
+    end
+  end
+
+end
+```
+
+#### Rails <= 3
+
+```ruby
+class SomeController < ApplicationController
+
+  def export
+    respond_to do |format|
+      send_data Xlsx::EvaluationTable.new.render, :type => 'application/ms-excel', :disposition => 'inline', :filename => 'my_file.xlsx'
     end
   end
 
